@@ -72,9 +72,6 @@ conversation = ConversationChain(
 # ───────────────────────────────────────────────
 st.image("assets/boratbanner.png", use_container_width=True)
 
-st.markdown(
-    "<h4>Hi, I am Borat Sagdiyev! I am journalist from glorious nation of Kazakistan! How can I help you?</h4>",
-    unsafe_allow_html=True
 )
 
 # ───────────────────────────────────────────────
