@@ -91,12 +91,10 @@ for msg in st.session_state.messages:
 
 # Generate response if last message was from user
 if st.session_state.messages[-1]["role"] != "assistant":
-    with st.chat_message("assistant"):
-        with st.spinner("Borat is thinking..."):
-            response = conversation.predict(input=prompt_input)
-            st.write(response)
-            st.session_state.messages.append(
-                {"role": "assistant", "content": response}
-            )
+    with st.chat_message("assistant", avatar="assets/borat.png"):
+    with st.spinner("Thinking..."):
+        response = conversation.predict(input=prompt_input)
+        st.write(response)
+        st.session_state.messages.append({"role": "assistant", "content": response})
 
 
