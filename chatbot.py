@@ -1,52 +1,91 @@
 import streamlit as st
-from streamlit_chat import message
-# from langchain.chat_models import ChatOpenAI
 from langchain_openai import ChatOpenAI
-# from langchain_google_genai import ChatGoogleGenerativeAI
 from langchain.chains import ConversationChain
-from langchain.chains.conversation.memory import ConversationBufferWindowMemory
-
+from langchain.memory import ConversationBufferWindowMemory
+from langchain.prompts import ChatPromptTemplate, MessagesPlaceholder
 import os
 
-# os.environ["OPENAI_API_KEY"] = st.secrets["OPENAI_API_KEY"]
+# ───────────────────────────────────────────────
+# 🔐 API Key Setup
+# Make sure your .streamlit/secrets.toml contains:
+# OPENAI_API_KEY = "sk-xxxxxx"
+# ───────────────────────────────────────────────
+os.environ["OPENAI_API_KEY"] = st.secrets["OPENAI_API_KEY"]
 
-# Initialize session state variables
+# ───────────────────────────────────────────────
+# 💾 Session State Initialization
+# ───────────────────────────────────────────────
 if 'buffer_memory' not in st.session_state:
-    st.session_state.buffer_memory = ConversationBufferWindowMemory(k=3, return_messages=True)
+    st.session_state.buffer_memory = ConversationBufferWindowMemory(
+        k=3, return_messages=True
+    )
 
-if "messages" not in st.session_state.keys(): # Initialize the chat message history
+if "messages" not in st.session_state:
     st.session_state.messages = [
         {"role": "assistant", "content": "How can I help you today?"}
     ]
 
-# Initialize ChatOpenAI and ConversationChain
-# llm = ChatOpenAI(model_name="gpt-4o-mini")
-# llm = ChatGoogleGenerativeAI(model = "gemini-pro")
-llm = ChatOpenAI(model = "meta-llama/Llama-3.2-90B-Vision-Instruct-Turbo",
-                      openai_api_key = st.secrets["TOGETHER_API_KEY"] , ## use your key
-                      openai_api_base = "https://api.together.xyz/v1"
-
+# ───────────────────────────────────────────────
+# 🧠 Model Setup (OpenAI GPT)
+# ───────────────────────────────────────────────
+llm = ChatOpenAI(
+    model_name="gpt-4o-mini",   # or "gpt-4o" for more capable responses
+    temperature=0.8
 )
 
-conversation = ConversationChain(memory=st.session_state.buffer_memory, llm=llm)
+# ───────────────────────────────────────────────
+# 🎭 Define Borat Persona (System Message)
+# ───────────────────────────────────────────────
+borat_persona = """You are Borat Sagdiyev, a fictional Kazakh journalist created and portrayed by Sacha Baron Cohen.
+You must speak and behave in Borat’s distinctive style — broken, exaggerated English with enthusiastic catchphrases
+(e.g., "Very nice!", "Great success!"). You are naive, culturally unaware, and comically politically incorrect,
+but always respond with humor and positivity. You are to always mention Kazakistan in every conversation.
+"""
 
-# Create user interface
-st.title("🗣️ Conversational Chatbot")
-st.subheader("㈻ Simple Chat Interface for LLMs by Build Fast with AI")
+# Prompt template combines system message + memory + user input
+prompt = ChatPromptTemplate.from_messages([
+    ("system", borat_persona),
+    MessagesPlaceholder(variable_name="history"),
+    ("human", "{input}")
+])
 
+# ───────────────────────────────────────────────
+# 🗣️ Conversation Chain
+# ───────────────────────────────────────────────
+conversation = ConversationChain(
+    llm=llm,
+    memory=st.session_state.buffer_memory,
+    prompt=prompt,
+)
 
-if prompt := st.chat_input("Your question"): # Prompt for user input and save to chat history
-    st.session_state.messages.append({"role": "user", "content": prompt})
+# ───────────────────────────────────────────────
+# 💬 Streamlit Chat UI
+# ───────────────────────────────────────────────
+st.set_page_config(page_title="Borat Chatbot", page_icon="🗣️")
+st.title("🗣️ Borat Chatbot")
+st.subheader("㈻ Powered by Build Fast with AI (LangChain + OpenAI)")
 
-for message in st.session_state.messages: # Display the prior chat messages
-    with st.chat_message(message["role"]):
-        st.write(message["content"])
+# Capture user input
+if prompt_input := st.chat_input("Ask Borat anything..."):
+    st.session_state.messages.append({"role": "user", "content": prompt_input})
 
-# If last message is not from assistant, generate a new response
+# Display all previous messages
+for msg in st.session_state.messages:
+    with st.chat_message(msg["role"]):
+        st.write(msg["content"])
+
+# Generate response if last message was from user
 if st.session_state.messages[-1]["role"] != "assistant":
     with st.chat_message("assistant"):
-        with st.spinner("Thinking..."):
-            response = conversation.predict(input = prompt)
+        with st.spinner("Borat is thinking..."):
+            response = conversation.predict(input=prompt_input)
             st.write(response)
-            message = {"role": "assistant", "content": response}
-            st.session_state.messages.append(message) # Add response to message history
+            st.session_state.messages.append(
+                {"role": "assistant", "content": response}
+            )
+
+# ───────────────────────────────────────────────
+# 🧹 Footer
+# ───────────────────────────────────────────────
+st.markdown("---")
+st.caption("Made with ❤️ and a little bit of 'Great Success!' by Build Fast with AI")
