@@ -61,6 +61,10 @@ conversation = ConversationChain(
 # ───────────────────────────────────────────────
 # 💬 Streamlit Chat UI
 # ───────────────────────────────────────────────
+
+# Add a big banner below the title
+st.image("assets/boratbanner.png", use_container_width=True)
+
 st.set_page_config(page_title="Borat Chatbot", page_icon="🥸")
 
 left, right = st.columns([1, 10], vertical_alignment="center")
@@ -71,9 +75,6 @@ with right:
         "<h1 style='margin:0; padding:0;'>Borat Chatbot</h1>",
         unsafe_allow_html=True
     )
-
-# Add a big banner below the title
-st.image("assets/boratbanner.png", use_container_width=True)
 
 # Capture user input
 if prompt_input := st.chat_input("Ask Borat anything..."):
