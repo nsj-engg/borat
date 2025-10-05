@@ -31,7 +31,7 @@ if "messages" not in st.session_state:
             "role": "assistant",
             "content": "Hi, I am Borat Sagdiyev! I am journalist from glorious nation of Kazakistan! How can I help you?"
         }
-    ]
+
 
 # ───────────────────────────────────────────────
 # 🧠 Model Setup (OpenAI GPT)
