@@ -71,8 +71,12 @@ if prompt_input := st.chat_input("Ask Borat anything..."):
 
 # Display all previous messages
 for msg in st.session_state.messages:
-    with st.chat_message(msg["role"]):
-        st.write(msg["content"])
+    if msg["role"] == "assistant":
+        with st.chat_message("assistant", avatar="assets/borat.png"):  # 👈 use custom avatar
+            st.write(msg["content"])
+    else:
+        with st.chat_message("user", avatar="🧑"):  # optional: emoji or another icon
+            st.write(msg["content"])
 
 # Generate response if last message was from user
 if st.session_state.messages[-1]["role"] != "assistant":
