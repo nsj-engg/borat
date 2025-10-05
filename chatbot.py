@@ -31,7 +31,7 @@ if "messages" not in st.session_state:
             "role": "assistant",
             "content": "Hi, I am Borat Sagdiyev! I am journalist from glorious nation of Kazakistan! How can I help you?"
         }
-
+    ]
 
 # ───────────────────────────────────────────────
 # 🧠 Model Setup (OpenAI GPT)
@@ -67,12 +67,10 @@ conversation = ConversationChain(
 )
 
 # ───────────────────────────────────────────────
-# 🖼️ Header UI (banner + title + intro line)
+# 🖼️ Header UI (banner only)
 # Make sure you have: assets/boratbanner.png and assets/borat.png
 # ───────────────────────────────────────────────
 st.image("assets/boratbanner.png", use_container_width=True)
-
-)
 
 # ───────────────────────────────────────────────
 # 💬 Chat UI
