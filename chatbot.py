@@ -73,7 +73,7 @@ with right:
     )
 
 # Add a big banner below the title
-st.image("assets/borat_banner.png", use_container_width=True)
+st.image("assets/boratbanner.png", use_container_width=True)
 
 # Capture user input
 if prompt_input := st.chat_input("Ask Borat anything..."):
