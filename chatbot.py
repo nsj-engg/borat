@@ -97,3 +97,13 @@ if st.session_state.messages[-1]["role"] != "assistant":
             st.session_state.messages.append(
                 {"role": "assistant", "content": response}
             )
+
+# ───────────────────────────────────────────────
+# 🪶 Footer / Watermark
+# ───────────────────────────────────────────────
+st.markdown("""
+    <hr style="margin-top: 2em; margin-bottom: 0.5em; border: 1px solid #444;">
+    <p style="text-align:center; color:gray; font-size:14px;">
+        © 2025 <b>Nakul Jayatsen</b> | Made with ❤️ and great success!
+    </p>
+""", unsafe_allow_html=True)
