@@ -1,9 +1,14 @@
+import os
 import streamlit as st
 from langchain_openai import ChatOpenAI
 from langchain.chains import ConversationChain
 from langchain.memory import ConversationBufferWindowMemory
 from langchain.prompts import ChatPromptTemplate, MessagesPlaceholder
-import os
+
+# ───────────────────────────────────────────────
+# 🔧 Page config (must be the first Streamlit call)
+# ───────────────────────────────────────────────
+st.set_page_config(page_title="Borat Chatbot", page_icon="🥸")
 
 # ───────────────────────────────────────────────
 # 🔐 API Key Setup
@@ -15,14 +20,17 @@ os.environ["OPENAI_API_KEY"] = st.secrets["OPENAI_API_KEY"]
 # ───────────────────────────────────────────────
 # 💾 Session State Initialization
 # ───────────────────────────────────────────────
-if 'buffer_memory' not in st.session_state:
+if "buffer_memory" not in st.session_state:
     st.session_state.buffer_memory = ConversationBufferWindowMemory(
         k=3, return_messages=True
     )
 
 if "messages" not in st.session_state:
     st.session_state.messages = [
-        {"role": "assistant", "content": "Hi, I am Borat Sagdiyev! I am journalist from glorious nation of Kazakistan! How can I help you?"}
+        {
+            "role": "assistant",
+            "content": "Hi, I am Borat Sagdiyev! I am journalist from glorious nation of Kazakistan! How can I help you?"
+        }
     ]
 
 # ───────────────────────────────────────────────
@@ -43,7 +51,7 @@ but always respond with humor and positivity. You are to always mention Kazakist
 """
 
 # Prompt template combines system message + memory + user input
-prompt = ChatPromptTemplate.from_messages([
+prompt_template = ChatPromptTemplate.from_messages([
     ("system", borat_persona),
     MessagesPlaceholder(variable_name="history"),
     ("human", "{input}")
@@ -55,17 +63,14 @@ prompt = ChatPromptTemplate.from_messages([
 conversation = ConversationChain(
     llm=llm,
     memory=st.session_state.buffer_memory,
-    prompt=prompt,
+    prompt=prompt_template,
 )
 
 # ───────────────────────────────────────────────
-# 💬 Streamlit Chat UI
+# 🖼️ Header UI (banner + title + intro line)
+# Make sure you have: assets/boratbanner.png and assets/borat.png
 # ───────────────────────────────────────────────
-
-# Add a big banner below the title
 st.image("assets/boratbanner.png", use_container_width=True)
-
-st.set_page_config(page_title="Borat Chatbot", page_icon="🥸")
 
 left, right = st.columns([1, 10], vertical_alignment="center")
 with left:
@@ -76,25 +81,33 @@ with right:
         unsafe_allow_html=True
     )
 
+st.markdown(
+    "<h4>Hi, I am Borat Sagdiyev! I am journalist from glorious nation of Kazakistan! How can I help you?</h4>",
+    unsafe_allow_html=True
+)
+
+# ───────────────────────────────────────────────
+# 💬 Chat UI
+# ───────────────────────────────────────────────
 # Capture user input
-if prompt_input := st.chat_input("Ask Borat anything..."):
+if (prompt_input := st.chat_input("Ask Borat anything...")):
     st.session_state.messages.append({"role": "user", "content": prompt_input})
 
-# Display all previous messages
+# Display chat history with custom avatars
 for msg in st.session_state.messages:
     if msg["role"] == "assistant":
-        with st.chat_message("assistant", avatar="assets/borat.png"):  # 👈 use custom avatar
+        with st.chat_message("assistant", avatar="assets/borat.png"):
             st.write(msg["content"])
     else:
-        with st.chat_message("user", avatar="🧑"):  # optional: emoji or another icon
+        with st.chat_message("user", avatar="🧑"):
             st.write(msg["content"])
 
-# Generate response if last message was from user
+# Generate response if the last message is from user
 if st.session_state.messages[-1]["role"] != "assistant":
     with st.chat_message("assistant", avatar="assets/borat.png"):
-    with st.spinner("Thinking..."):
-        response = conversation.predict(input=prompt_input)
-        st.write(response)
-        st.session_state.messages.append({"role": "assistant", "content": response})
-
-
+        with st.spinner("Thinking..."):
+            response = conversation.predict(input=prompt_input)
+            st.write(response)
+            st.session_state.messages.append(
+                {"role": "assistant", "content": response}
+            )
