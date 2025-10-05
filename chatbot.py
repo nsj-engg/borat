@@ -72,15 +72,6 @@ conversation = ConversationChain(
 # ───────────────────────────────────────────────
 st.image("assets/boratbanner.png", use_container_width=True)
 
-left, right = st.columns([1, 10], vertical_alignment="center")
-with left:
-    st.image("assets/borat.png", width=48)
-with right:
-    st.markdown(
-        "<h1 style='margin:0; padding:0;'>Borat Chatbot</h1>",
-        unsafe_allow_html=True
-    )
-
 st.markdown(
     "<h4>Hi, I am Borat Sagdiyev! I am journalist from glorious nation of Kazakistan! How can I help you?</h4>",
     unsafe_allow_html=True
