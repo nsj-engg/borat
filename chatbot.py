@@ -61,9 +61,17 @@ conversation = ConversationChain(
 # ───────────────────────────────────────────────
 # 💬 Streamlit Chat UI
 # ───────────────────────────────────────────────
-st.set_page_config(page_title="Borat Chatbot", page_icon="🗣️")
-st.title("🗣️ Borat Chatbot")
-st.subheader("㈻ Powered by Build Fast with AI (LangChain + OpenAI)")
+st.set_page_config(page_title="Borat Chatbot", page_icon="assets/borat.png")
+
+left, right = st.columns([1, 10], vertical_alignment="center")
+with left:
+    st.image("assets/borat.png", width=48)
+with right:
+    st.markdown(
+        "<h1 style='margin:0; padding:0;'>Borat Chatbot</h1>",
+        unsafe_allow_html=True
+    )
+# st.subheader("㈻ Powered by Build Fast with AI (LangChain + OpenAI)")
 
 # Capture user input
 if prompt_input := st.chat_input("Ask Borat anything..."):
@@ -87,5 +95,5 @@ if st.session_state.messages[-1]["role"] != "assistant":
 # ───────────────────────────────────────────────
 # 🧹 Footer
 # ───────────────────────────────────────────────
-st.markdown("---")
-st.caption("Made with ❤️ and a little bit of 'Great Success!' by Build Fast with AI")
+# st.markdown("---")
+# st.caption("Made with ❤️ and a little bit of 'Great Success!' by Build Fast with AI")
