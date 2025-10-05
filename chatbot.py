@@ -22,7 +22,7 @@ if 'buffer_memory' not in st.session_state:
 
 if "messages" not in st.session_state:
     st.session_state.messages = [
-        {"role": "assistant", "content": "How can I help you today?"}
+        {"role": "assistant", "content": "Hi, I am Borat Sagdiyev! I am journalist from glorious nation of Kazakistan! How can I help you?"}
     ]
 
 # ───────────────────────────────────────────────
