@@ -63,7 +63,17 @@ conversation = ConversationChain(
 # ───────────────────────────────────────────────
 st.set_page_config(page_title="Borat Chatbot", page_icon="🥸")
 
-# st.subheader("㈻ Powered by Build Fast with AI (LangChain + OpenAI)")
+left, right = st.columns([1, 10], vertical_alignment="center")
+with left:
+    st.image("assets/borat.png", width=48)
+with right:
+    st.markdown(
+        "<h1 style='margin:0; padding:0;'>Borat Chatbot</h1>",
+        unsafe_allow_html=True
+    )
+
+# Add a big banner below the title
+st.image("assets/borat_banner.png", use_container_width=True)
 
 # Capture user input
 if prompt_input := st.chat_input("Ask Borat anything..."):
@@ -88,8 +98,4 @@ if st.session_state.messages[-1]["role"] != "assistant":
                 {"role": "assistant", "content": response}
             )
 
-# ───────────────────────────────────────────────
-# 🧹 Footer
-# ───────────────────────────────────────────────
-# st.markdown("---")
-# st.caption("Made with ❤️ and a little bit of 'Great Success!' by Build Fast with AI")
+
